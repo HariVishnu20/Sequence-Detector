@@ -89,77 +89,42 @@ endmodule
 
 ## Verilog Code for Sequence Detector Using Mealy FSM
 
+state_t current_state, next_state;
 
-module mealy(clk,rst,inp,out);
- input clk, rst, inp;
- output out;
- reg out;
- reg [1:0] state;
- always @(posedge clk, posedge rst)
- begin
-     if(rst)
-     begin
-     out <= 0;
-            state <= 2'b00;
-         end
-     else
-         begin
-             case (state)
-             2'b00: 
-                 begin
-                     if (inp) begin
-                         state <=2'b01;
-                         out <=0;
-                     end
-                     else begin
-                         state <=2'b10;
-                         out <=0;
-                    end
-                 end
-             2'b01:
-                 begin
+// State transition logic
+always @(posedge clk or posedge reset) begin
+    if (reset)
+        current_state <= S0;
+    else
+        current_state <= next_state;
+end
 
-                     if(inp) begin
-
-                         state <= 2'b00;
-
-                         out <= 1;
-
-                     end
-
-                     else begin
-
-                         state <= 2'b10;
-
-                         out <= 0;
-                     end
-                 end
-             2'b10:
-                 begin
-                     if(inp) begin
-
-                         state <= 2'b01;
-
-                         out <= 0;
-
-                     end
-
-                     else begin
-
-                         state <= 2'b00;
-
-                         out <= 1;
-                     end
-                 end
-             default:
-                 begin
-                     state <= 2'b00;
-                     out <= 0;
-                 end
-             endcase
-         end
- end
- endmodule
+// Next state and output logic
+always @(*) begin
+    detected = 0;
+    case (current_state)
+        S0: begin
+            if (seq_in) next_state = S1;
+            else next_state = S0;
+        end
+        S1: begin
+            if (seq_in) next_state = S1;
+            else next_state = S2;
+        end
+        S2: begin
+            if (seq_in) next_state = S3;
+            else next_state = S0;
+        end
+        S3: begin
+            if (seq_in) begin
+                next_state = S1;
+                detected = 1;  // Sequence 1011 detected
+            end else
+                next_state = S2;
+        end
+        default: next_state = S0;
+    endcase
+end
 
 ## OUTPUT
 ![Screenshot Image 2024-11-11 at 16 06 01_a5b5240c](https://github.com/user-attachments/assets/d65c8df0-bfc3-4918-8497-10ab9fde6295)
