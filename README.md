@@ -88,7 +88,7 @@ endmodule
 ![Screenshot Image 2024-11-11 at 16 02 37_ba99ffb6](https://github.com/user-attachments/assets/8d27a68b-2a5d-4c86-b883-2ea8b8b735a9)
 
 ## Verilog Code for Sequence Detector Using Mealy FSM
-
+```
 state_t current_state, next_state;
 
 // State transition logic
@@ -125,7 +125,7 @@ always @(*) begin
         default: next_state = S0;
     endcase
 end
-
+```
 ## OUTPUT
 ![Screenshot Image 2024-11-11 at 16 06 01_a5b5240c](https://github.com/user-attachments/assets/d65c8df0-bfc3-4918-8497-10ab9fde6295)
 
